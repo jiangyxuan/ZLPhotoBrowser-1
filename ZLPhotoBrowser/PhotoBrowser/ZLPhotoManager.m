@@ -360,6 +360,27 @@ static BOOL _sortAscending;
     }
 }
 
++ (NSInteger)getVideoSize:(PHAsset *)asset{
+     if (asset.mediaType != PHAssetMediaTypeVideo) return @"";
+    NSInteger duration = (NSInteger)round(asset.duration);
+    dispatch_semaphore_t signal = dispatch_semaphore_create(0);
+    __block NSInteger videoSize = 0;
+    PHVideoRequestOptions* options = [[PHVideoRequestOptions alloc] init];
+    options.version = PHVideoRequestOptionsVersionOriginal;
+    options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
+    options.networkAccessAllowed = YES;
+    [[PHImageManager defaultManager] requestAVAssetForVideo:asset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+        AVURLAsset* urlAsset = (AVURLAsset*)asset;
+        NSNumber *size;
+        [urlAsset.URL getResourceValue:&size forKey:NSURLFileSizeKey error:nil];
+        NSLog(@"size is %f",[size floatValue]/(1024.0*1024.0));
+        videoSize = [size floatValue]/(1024.0*1024.0);
+        dispatch_semaphore_signal(signal);
+    }];
+    dispatch_semaphore_wait(signal, DISPATCH_TIME_FOREVER);
+    return videoSize;
+}
+
 + (PHImageRequestID)requestOriginalImageDataForAsset:(PHAsset *)asset progressHandler:(void (^ _Nullable)(double, NSError *, BOOL *, NSDictionary *))progressHandler completion:(void (^)(NSData *, NSDictionary *))completion
 {
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc]init];

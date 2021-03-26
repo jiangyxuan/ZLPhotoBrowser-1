@@ -40,6 +40,7 @@
     configuration.allowEditVideo = NO;
     configuration.allowSelectOriginal = YES;
     configuration.maxEditVideoTime = 10;
+    configuration.maxVideoSize = 20;
     configuration.maxVideoDuration = 120;
     configuration.allowSlideSelect = YES;
     configuration.allowDragSelect = NO;
@@ -62,7 +63,7 @@
     configuration.bottomBtnsDisableTitleColor = kRGB(168, 168, 168);
     configuration.bottomBtnsNormalBgColor = kRGB(80, 169, 52);
     configuration.bottomBtnsDisableBgColor = kRGB(39, 80, 32);
-    configuration.showSelectedMask = NO;
+    configuration.showSelectedMask = YES;
     configuration.selectedMaskColor = [[UIColor blackColor] colorWithAlphaComponent:0.2];
     configuration.showSelectedIndex = YES;
     configuration.indexLabelBgColor = kRGB(80, 169, 52);
@@ -126,6 +127,11 @@
 - (void)setMaxEditVideoTime:(NSInteger)maxEditVideoTime
 {
     _maxEditVideoTime = MAX(maxEditVideoTime, 10);
+}
+
+-(void)setMaxVideoSize:(NSInteger)maxVideoSize
+{
+    _maxVideoSize = MAX(maxVideoSize, 20);
 }
 
 - (void)setCustomImageNames:(NSArray<NSString *> *)customImageNames

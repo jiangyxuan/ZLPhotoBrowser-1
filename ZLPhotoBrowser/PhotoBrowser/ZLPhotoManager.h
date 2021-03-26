@@ -118,7 +118,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief 转换视频时长
  */
 + (NSString *)getDuration:(PHAsset *)asset;
-
+/**
+* @brief 转换视频大小
+*/
++ (NSInteger)getVideoSize:(PHAsset *)asset;
 /**
  * @brief 判断图片是否存储在本地/或者已经从iCloud上下载到本地
  *

@@ -127,6 +127,11 @@
 @property (nonatomic, assign) NSInteger maxVideoDuration;
 
 /**
+ 允许选择视频的最大内存，单位：秒， 默认 20M
+ */
+@property (nonatomic, assign) NSInteger maxVideoSize;
+
+/**
  是否允许滑动选择 默认 YES
  */
 @property (nonatomic, assign) BOOL allowSlideSelect;

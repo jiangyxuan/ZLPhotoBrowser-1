@@ -41,6 +41,7 @@
 #define ZLPhotoBrowserEditText @"ZLPhotoBrowserEditText"
 #define ZLPhotoBrowserSaveText @"ZLPhotoBrowserSaveText"
 #define ZLPhotoBrowserMaxVideoDurationText @"ZLPhotoBrowserMaxVideoDurationText"
+#define ZLPhotoBrowserMaxVideoSizeText @"ZLPhotoBrowserMaxVideoSizeText"
 #define ZLPhotoBrowserLoadNetImageFailed @"ZLPhotoBrowserLoadNetImageFailed"
 #define ZLPhotoBrowserSaveVideoFailed @"ZLPhotoBrowserSaveVideoFailed"
 #define ZLPhotoBrowserRequestTimeout @"ZLPhotoBrowserRequestTimeout"

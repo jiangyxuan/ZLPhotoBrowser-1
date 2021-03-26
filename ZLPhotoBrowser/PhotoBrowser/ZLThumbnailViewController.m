@@ -661,8 +661,23 @@ typedef NS_ENUM(NSUInteger, SlideSelectType) {
         ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxSelectCountText), configuration.maxSelectCount);
         return NO;
     }
+    
+    if (configuration.maxSelectCount < 9  && model.type == ZLAssetMediaTypeVideo) {
+        ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserCannotSelectVideo));
+        return NO;
+    }
+
     if (nav.arrSelectedModels.count > 0) {
         ZLPhotoModel *sm = nav.arrSelectedModels.firstObject;
+        if ((model.type == ZLAssetMediaTypeVideo && sm.type != ZLAssetMediaTypeVideo) || (model.type != ZLAssetMediaTypeVideo && sm.type == ZLAssetMediaTypeVideo)) {
+            ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserCannotSelectVideo));
+            return NO;
+        }
+        if (sm.type == ZLAssetMediaTypeVideo && nav.arrSelectedModels.count >= 1) {
+             ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxVideoSelectCountInMix), 1);
+            return NO;
+        }
+        
         if (!configuration.allowMixSelect &&
             ((model.type < ZLAssetMediaTypeVideo && sm.type == ZLAssetMediaTypeVideo) || (model.type == ZLAssetMediaTypeVideo && sm.type < ZLAssetMediaTypeVideo))) {
             ShowToastLong(@"%@", GetLocalLanguageTextValue(ZLPhotoBrowserCannotSelectVideo));
@@ -671,6 +686,10 @@ typedef NS_ENUM(NSUInteger, SlideSelectType) {
     }
     if (![ZLPhotoManager judgeAssetisInLocalAblum:model.asset]) {
         ShowToastLong(@"%@", GetLocalLanguageTextValue(ZLPhotoBrowseriCloudPhotoText));
+        return NO;
+    }
+    if (model.type == ZLAssetMediaTypeVideo && [ZLPhotoManager getVideoSize:model.asset] > configuration.maxVideoSize) {
+        ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxVideoSizeText), configuration.maxVideoSize);
         return NO;
     }
     if (model.type == ZLAssetMediaTypeVideo && GetDuration(model.duration) > configuration.maxVideoDuration) {

@@ -762,6 +762,10 @@ double const ScalePhotoWidth = 1000;
                 ShowToastLong(@"%@", GetLocalLanguageTextValue(ZLPhotoBrowseriCloudPhotoText));
                 return;
             }
+            if (model.type == ZLAssetMediaTypeVideo && [ZLPhotoManager getVideoSize:model.asset] > self.configuration.maxVideoSize) {
+                ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxVideoSizeText), self.configuration.maxVideoSize);
+                return;
+            }
             if (model.type == ZLAssetMediaTypeVideo && GetDuration(model.duration) > self.configuration.maxVideoDuration) {
                 ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxVideoDurationText), self.configuration.maxVideoDuration);
                 return;
@@ -823,6 +827,7 @@ double const ScalePhotoWidth = 1000;
         [cell.indexLabel.layer addAnimation:GetBtnStatusChangedAnimation() forKey:nil];
     }
 }
+
 
 - (void)refreshCellIndex {
     if (!self.configuration.showSelectedIndex) {

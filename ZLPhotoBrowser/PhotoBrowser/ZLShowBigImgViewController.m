@@ -407,10 +407,23 @@
     
     if (!self.arrSelPhotos && nav.arrSelectedModels.count == 0) {
         ZLPhotoModel *model = self.models[_currentPage-1];
+        if (nav.arrSelectedModels.count >= configuration.maxSelectCount) {
+            ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxSelectCountText), configuration.maxSelectCount);
+            return;
+        }
+        if (configuration.maxSelectCount < 9  && model.type == ZLAssetMediaTypeVideo) {
+            ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserCannotSelectVideo));
+            return;
+        }
         if (![ZLPhotoManager judgeAssetisInLocalAblum:model.asset]) {
             ShowToastLong(@"%@", GetLocalLanguageTextValue(ZLPhotoBrowserLoadingText));
             return;
         }
+        if (model.type == ZLAssetMediaTypeVideo && [ZLPhotoManager getVideoSize:model.asset] > configuration.maxVideoSize) {
+            ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxVideoSizeText), configuration.maxVideoSize);
+            return;
+        }
+        
         if (model.type == ZLAssetMediaTypeVideo && GetDuration(model.duration) > configuration.maxVideoDuration) {
             ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxVideoDurationText), configuration.maxVideoDuration);
             return;
@@ -457,6 +470,28 @@
     ZLPhotoConfiguration *configuration = nav.configuration;
     
     ZLPhotoModel *model = self.models[_currentPage-1];
+    
+    if (nav.arrSelectedModels.count >= configuration.maxSelectCount) {
+        ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxSelectCountText), configuration.maxSelectCount);
+        return;
+    }
+    
+    if (configuration.maxSelectCount < 9  && model.type == ZLAssetMediaTypeVideo) {
+        ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserCannotSelectVideo));
+        return;
+    }
+    if (nav.arrSelectedModels.count > 0) {
+        ZLPhotoModel *sm = nav.arrSelectedModels.firstObject;
+        if ((model.type == ZLAssetMediaTypeVideo && sm.type != ZLAssetMediaTypeVideo) || (model.type != ZLAssetMediaTypeVideo && sm.type == ZLAssetMediaTypeVideo)) {
+            ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserCannotSelectVideo));
+            return;
+        }
+        if (sm.type == ZLAssetMediaTypeVideo && nav.arrSelectedModels.count >= 1) {
+             ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxVideoSelectCountInMix), 1);
+            return;
+        }
+    }
+
     if (!btn.selected) {
         //选中
         [btn.layer addAnimation:GetBtnStatusChangedAnimation() forKey:nil];
@@ -466,6 +501,10 @@
         }
         if (model.asset && ![ZLPhotoManager judgeAssetisInLocalAblum:model.asset]) {
             ShowToastLong(@"%@", GetLocalLanguageTextValue(ZLPhotoBrowserLoadingText));
+            return;
+        }
+        if (model.type == ZLAssetMediaTypeVideo && [ZLPhotoManager getVideoSize:model.asset] > configuration.maxVideoSize) {
+            ShowToastLong(GetLocalLanguageTextValue(ZLPhotoBrowserMaxVideoSizeText), configuration.maxVideoSize);
             return;
         }
         if (model.type == ZLAssetMediaTypeVideo && GetDuration(model.duration) > configuration.maxVideoDuration) {
