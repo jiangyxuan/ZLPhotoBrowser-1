@@ -939,6 +939,7 @@
         [UIView animateWithDuration:0.25 animations:^{
             self.takedImageView.alpha = 0;
         } completion:^(BOOL finished) {
+            self.takedImage = nil;
             self.takedImageView.hidden = YES;
             self.takedImageView.alpha = 1;
         }];
