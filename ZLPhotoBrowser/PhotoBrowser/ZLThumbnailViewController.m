@@ -1048,8 +1048,10 @@ typedef NS_ENUM(NSUInteger, SlideSelectType) {
     
     BOOL sel = shouldSelect();
     if (configuration.maxSelectCount > 1 && nav.arrSelectedModels.count < configuration.maxSelectCount && sel) {
-        model.selected = sel;
-        [nav.arrSelectedModels addObject:model];
+        if (nav.arrSelectedModels.count == 0 || nav.arrSelectedModels.count > 1 && nav.arrSelectedModels.firstObject.asset.mediaType != ZLAssetMediaTypeVideo) {
+            model.selected = sel;
+            [nav.arrSelectedModels addObject:model];
+        }
     } else if (configuration.maxSelectCount == 1 && !nav.arrSelectedModels.count && sel) {
         if (![self shouldDirectEdit:model]) {
             model.selected = sel;
